@@ -54,3 +54,10 @@ function dsivia(p₀::IntervalBox{M,T},
     results = fetch.(futures)
     reduce(vcat, results)
 end
+
+function example()
+    f(p) = IntervalBox(p[1]^2 + p[2]^2 + p[1] * p[2])
+    Y = IntervalBox(1.0..2.0)
+    x₀ = (-10.0..10.0) × (-10.0..10.0)
+    sivia(x₀, f, Y, 0.001)
+end
