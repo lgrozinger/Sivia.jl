@@ -19,7 +19,7 @@ function sivia(p₀::IntervalBox{M,T},
             if image ⊂ Y
                 push!(solutions, p)
                 if sizeof(solutions) > memlim
-                    solutions = merge_sort_merge(solutions)
+                    solutions = merge(solutions)
                 end
             elseif isempty(image ∩ Y)
             elseif diam(p) < ϵ
