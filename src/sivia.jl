@@ -44,7 +44,7 @@ function dsivia(p₀::IntervalBox{M,T},
                 sivfun::Function=sivia) where {N,M,T<:Real}
 
 
-    L = Vector{IntervalBox{M,T}}(p₀)
+    L = Vector{IntervalBox{M,T}}([p₀])
     while length(L) < numWorkers
         L = bisect.(L)
         L = reduce(vcat, [collect(i) for i in L])
