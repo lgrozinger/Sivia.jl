@@ -1,4 +1,4 @@
-import Base.merge
+import Base.merge, Base.intersect
 
 struct IntervalParameter
     intervals::Vector{Interval}
