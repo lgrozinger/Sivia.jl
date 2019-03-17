@@ -8,7 +8,7 @@ function sivia(p₀::IntervalBox{M,T},
 
 
     solutions = Vector{IntervalBox{M,T}}()
-    L = Vector{IntervalBox{M,T}}(p₀)
+    L = Vector{IntervalBox{M,T}}([p₀])
 
     while length(L) != 0
         p = pop!(L)

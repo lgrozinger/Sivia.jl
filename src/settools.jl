@@ -1,12 +1,28 @@
+import Base.merge
+
 struct IntervalParameter
     intervals::Vector{Interval}
     name::String
 end
 
-struct SiviaResults
+struct SiviaResults{T<:IntervalBox}
     tag::String
-    boxes::Vector{IntervalBox}
+    boxes::Vector{T}
     parameters::Vector{IntervalParameter}
+
+    function SiviaResults(tag::String, boxes::Vector{T}, names::Vector{String}) where T<:IntervalBox
+        lines = [merge(project(boxes, d)) for d in 1:length(names)]
+        lines = [map(x -> x.v[1], line) for line in lines]
+
+        parameters = map(IntervalParameter, lines, names)
+        new{T}(tag, boxes, parameters)
+    end
+end
+
+function Base.show(io::IO, m::SiviaResults{T}) where T<:IntervalBox
+    n = length(m.boxes)
+    d = length(m.parameters)
+    println(io, "Sivia results for $(m.tag), $n boxes, of $d parameters.")
 end
 
 function lt(A::IntervalBox{M, T}, B::IntervalBox{M, T}) where {M, T<:Real}
@@ -28,7 +44,7 @@ function dmerge(A::Vector{T}, n::Integer) where T<:IntervalBox
 
     futures = (chunk -> @spawn merge(chunk)).(chunks)
     results = fetch.(futures)
-    return merge_sort_merge(reduce(append!, results))
+    return merge(reduce(append!, results))
 end
 
 function merge(A::Vector{T}, B::Vector{T}, comp=lt) where T<:IntervalBox
@@ -100,8 +116,8 @@ function merge(A::Vector{T}, comp=lt) where T<:IntervalBox
         left = A[1:halfway]
         right = A[halfway+1:end]
 
-        left = merge_sort_merge(left)
-        right = merge_sort_merge(right)
+        left = merge(left)
+        right = merge(right)
 
         return merge(left, right)
     else
@@ -137,8 +153,8 @@ function intersect(A::Vector{T}, B::Vector{T}, d...) where T<:IntervalBox
     intersectionA = Vector{T}()
     intersectionB = Vector{T}()
 
-    Aⁱ = merge(projection(A, d...))
-    Bⁱ = merge(projection(B, d...))
+    Aⁱ = merge(project(A, d...))
+    Bⁱ = merge(project(B, d...))
 
     regions = Vector{typeof(Aⁱ[1])}()
     for a in Aⁱ

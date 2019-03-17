@@ -9,7 +9,8 @@ export
     intersect,
     project,
     IntervalParameter,
-    SiviaResults
+    SiviaResults,
+    siviaresults
 
 using IntervalArithmetic
 using RecipesBase
