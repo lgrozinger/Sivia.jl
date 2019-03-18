@@ -156,7 +156,7 @@ function intersect(A::Vector{T}, B::Vector{T}, d...) where T<:IntervalBox
     Aⁱ = merge(project(A, d...))
     Bⁱ = merge(project(B, d...))
 
-    regions = Vector{typeof(Aⁱ[1])}()
+    regions = Vector{eltype(Aⁱ)}()
     for a in Aⁱ
         for b in Bⁱ
             cap = a ∩ b
@@ -173,7 +173,11 @@ function intersect(listA::Vector{IntervalBox{M, T}}, listB::Vector{IntervalBox{M
     return intersect(listA, listB, 1:M...)
 end
 
-function project(A::Vector{IntervalBox{M,T}}, d...) where {M,T<:Real}
+function project(A::Vector{T}, d...) where T<:IntervalBox
     projector(x) = IntervalBox([x.v[i] for i in d])
-    Vector{IntervalBox{length(d), T}}(map(projector, A))
+    if length(A) > 0
+        Vector{IntervalBox{length(d), eltype(A[1].v[1])}}(map(projector, A))
+    else
+        Vector{T}()
+    end
 end
