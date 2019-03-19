@@ -149,10 +149,7 @@ function merge!(A::Vector{T}) where T<:IntervalBox
     end
 end
 
-function intersect(A::Vector{T}, B::Vector{T}, d...) where T<:IntervalBox
-    intersectionA = Vector{T}()
-    intersectionB = Vector{T}()
-
+function intersect(A::Vector{T}, B::Vector{T}, d::Integer...) where T<:IntervalBox
     Aⁱ = merge(project(A, d...))
     Bⁱ = merge(project(B, d...))
 
@@ -169,8 +166,8 @@ function intersect(A::Vector{T}, B::Vector{T}, d...) where T<:IntervalBox
     return merge(regions)
 end
 
-function intersect(listA::Vector{IntervalBox{M, T}}, listB::Vector{IntervalBox{M, T}}) where {M, T<:Real}
-    return intersect(listA, listB, 1:M...)
+function intersect(A::Vector{IntervalBox{M, T}}, B::Vector{IntervalBox{M, T}}) where {M, T<:Real}
+    return intersect(A, B, 1:M...)
 end
 
 function project(A::Vector{T}, d...) where T<:IntervalBox
