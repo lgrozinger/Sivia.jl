@@ -175,9 +175,10 @@ end
 
 function project(A::Vector{T}, d...) where T<:IntervalBox
     projector(x) = IntervalBox([x.v[i] for i in d])
+    projection = Vector{IntervalBox{length(d), Float64}}()
     if length(A) > 0
-        Vector{IntervalBox{length(d), eltype(A[1].v[1])}}(map(projector, A))
-    else
-        Vector{T}()
+        append!(projection, map(projector, A))
     end
+
+    projection
 end

@@ -20,7 +20,7 @@ using RecipesBase
 end
 
 
-## Paramter boxplot
+## Parameter boxplot
 @recipe function f(A::Vector{IntervalParameter}, colour=1, alpha=0.25)
 
     yticks := (1:length(A), map(p -> p.name, A))
