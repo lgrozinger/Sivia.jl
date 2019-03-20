@@ -38,6 +38,9 @@ end
 
 function dmerge(A::Vector{T}, n::Integer) where T<:IntervalBox
     chunk_size = div(length(A), n)
+    if chunk_size == 0
+        return A
+    end
     size = length(A)
     chunks = [A[start:start+chunk_size-1] for start in 1:chunk_size:size-chunk_size]
     append!(chunks[end], A[n*chunk_size:end])
@@ -149,10 +152,7 @@ function merge!(A::Vector{T}) where T<:IntervalBox
     end
 end
 
-function intersect(A::Vector{T}, B::Vector{T}, d...) where T<:IntervalBox
-    intersectionA = Vector{T}()
-    intersectionB = Vector{T}()
-
+function intersect(A::Vector{T}, B::Vector{T}, d::Integer...) where T<:IntervalBox
     Aⁱ = merge(project(A, d...))
     Bⁱ = merge(project(B, d...))
 

@@ -6,7 +6,7 @@ using RecipesBase
     ys = Float64[]
     zs = Float64[]
 
-    seriestype := :volume
+    seriestype := :surface
 
     for xyz in v
         (x, y, z) = xyz
