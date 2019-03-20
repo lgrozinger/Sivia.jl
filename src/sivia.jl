@@ -31,6 +31,8 @@ function sivia(p₀::IntervalBox{M,T},
         end
     end
 
+    write(stdout, "Set complete.")
+    @show length(solutions)
     return solutions
 end
 

@@ -62,11 +62,13 @@ end
         lower = levels[i+1]
 
         for u in upper
-            xs = [u[1][1], u[1][2]]
-            ys = [u[2][1], u[2][1]]
+            uxs = [u[1][1], u[1][2]]
+            uys = [u[2][1], u[2][1]]
             for l in lower
-                append!(xs, [l[1][2], l[1][1], xs[1]])
-                append!(ys, [l[2][1], l[2][1], ys[1]])
+                xs = []
+                ys = []
+                append!(xs, [l[1][2], l[1][1], uxs[1]])
+                append!(ys, [l[2][1], l[2][1], uys[1]])
                 @series begin
                     seriestype := :shape
                     seriescolor := colour

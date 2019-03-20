@@ -29,8 +29,6 @@ function lt(A::IntervalBox{M, T}, B::IntervalBox{M, T}) where {M, T<:Real}
     for d in 1:M
         if A[d] != B[d] && A[d].lo > B[d].lo
             return false
-        elseif A[d].lo == B[d].lo && A[d].hi > B[d].hi
-            return false
         end
     end
     return true
