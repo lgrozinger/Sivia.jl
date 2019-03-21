@@ -35,17 +35,17 @@ function lt(A::IntervalBox{M, T}, B::IntervalBox{M, T}) where {M, T<:Real}
 end
 
 function dmerge(A::Vector{T}, n::Integer) where T<:IntervalBox
-    chunk_size = div(length(A), n)
-    if chunk_size == 0
-        return A
-    end
-    size = length(A)
-    chunks = [A[start:start+chunk_size-1] for start in 1:chunk_size:size-chunk_size]
-    append!(chunks[end], A[n*chunk_size:end])
+
+    r = rem(length(A), n)
+    filled = A[1:end-r]
+    chunks = reshape(filled, (n, div(length(filled), n)))
+    chunks = [chunks[i,:] for i in 1:n]
+    leftover = A[end-r+1:end]
+    append!(chunks[end], leftover)
 
     futures = (chunk -> @spawn merge(chunk)).(chunks)
     results = fetch.(futures)
-    return merge(reduce(append!, results))
+    return merge(vcat(results...))
 end
 
 function merge(A::Vector{T}, B::Vector{T}, comp=lt) where T<:IntervalBox

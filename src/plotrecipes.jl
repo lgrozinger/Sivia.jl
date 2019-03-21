@@ -67,6 +67,8 @@ end
             for l in lower
                 xs = []
                 ys = []
+                append!(xs, uxs)
+                append!(ys, uys)
                 append!(xs, [l[1][2], l[1][1], uxs[1]])
                 append!(ys, [l[2][1], l[2][1], uys[1]])
                 @series begin

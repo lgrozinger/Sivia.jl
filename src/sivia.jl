@@ -3,8 +3,7 @@ function sivia(p₀::IntervalBox{M,T},
                Y::IntervalBox{N,T},
                ϵ::T;
                feas::Function=p->true,
-               bisector::Function=bisect,
-               memlim::Integer=2^30) where {M,N,T<:Real}
+               bisector::Function=bisect) where {M,N,T<:Real}
 
 
     solutions = Vector{IntervalBox{M,T}}()
@@ -18,9 +17,6 @@ function sivia(p₀::IntervalBox{M,T},
             image = f(p)
             if image ⊂ Y
                 push!(solutions, p)
-                if sizeof(solutions) > memlim
-                    solutions = merge(solutions)
-                end
             elseif isempty(image ∩ Y)
             elseif diam(p) < ϵ
             else
@@ -31,8 +27,6 @@ function sivia(p₀::IntervalBox{M,T},
         end
     end
 
-    write(stdout, "Set complete.")
-    @show length(solutions)
     return solutions
 end
 
