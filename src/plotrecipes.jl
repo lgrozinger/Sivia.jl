@@ -21,7 +21,7 @@ end
 
 
 ## Parameter boxplot
-@recipe function f(A::Vector{IntervalParameter}, colour=1, alpha=0.25)
+@recipe function f(A::Vector{IntervalParameter}; line_col=1, search_col=1)
 
     yticks := (1:length(A), map(p -> p.name, A))
     legend := :none
@@ -31,26 +31,6 @@ end
         p = A[t]
         for i in p.intervals
             push!(lines, ([i.lo, i.hi], repeat([t], 2)))
-        end
-    end
-
-    ## intervals and markers
-    for line in lines
-        @series begin
-            seriestype := :path
-            seriescolor := colour
-            linewidth := 5
-            linecolor := colour
-            line[1], line[2]
-        end
-        @series begin
-            seriestype := :scatter
-            seriescolor := colour
-            markershape := :vline
-            linewidth := 5
-            linecolor := colour
-            markersize := 5
-            line[1], line[2]
         end
     end
 
@@ -73,26 +53,42 @@ end
                 append!(ys, [l[2][1], l[2][1], uys[1]])
                 @series begin
                     seriestype := :shape
-                    seriescolor := colour
-                    fillalpha := alpha
-                    fillcolor := colour
+                    seriescolor := line_col
+                    fillcolor := search_col
                     linestyle := :dot
                     xs, ys
                 end
                 @series begin
                     seriestype := :path
-                    seriescolor := colour
+                    seriescolor := line_col
                     linestyle := :dot
                     [xs[2], xs[3]], [ys[2], ys[3]]
                 end
                 @series begin
                     seriestype := :path
-                    seriescolor := colour
-                    linecolor := colour
+                    seriescolor := line_col
                     linestyle := :dot
                     [xs[1], xs[4]], [ys[1], ys[4]]
                 end
             end
+        end
+    end
+
+        ## intervals and markers
+    for line in lines
+        @series begin
+            seriestype := :path
+            seriescolor := line_col
+            linewidth := 5
+            line[1], line[2]
+        end
+        @series begin
+            seriestype := :scatter
+            seriescolor := line_col
+            markershape := :vline
+            linewidth := 5
+            markersize := 5
+            line[1], line[2]
         end
     end
 end
