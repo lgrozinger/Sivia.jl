@@ -10,7 +10,7 @@ struct SiviaResults{T<:IntervalBox}
     boxes::Vector{T}
     parameters::Vector{IntervalParameter}
 
-    function SiviaResults(tag::String, boxes::Vector{T}, names::Vector{String}) where T<:IntervalBox
+    function SiviaResults(tag::AbstractString, boxes::Vector{T}, names::Vector{S}) where {T<:IntervalBox, S<:AbstractString}
         lines = [merge(project(boxes, d)) for d in 1:length(names)]
         lines = [map(x -> x.v[1], line) for line in lines]
 
@@ -32,6 +32,39 @@ function lt(A::IntervalBox{M, T}, B::IntervalBox{M, T}) where {M, T<:Real}
         end
     end
     return true
+end
+
+function lt_d(A::IntervalBox{M, T}, B::IntervalBox{M, T}, d::Integer) where {M, T<:Real}
+    D = 1:M
+    D[1], D[d] = D[d], D[1]
+    for i in D
+        if A[i] != B[i] && A[i].lo > B[i].lo
+            return false
+        end
+    end
+    return true
+end
+
+function merge_best_effort(A::Vector{T}) where T<:IntervalBox
+    results = A
+    n = length(A)
+    while true
+        results = merge_all_dims(results)
+        n == length(results) && break
+        n = length(results)
+    end
+    results
+end
+
+function merge_all_dims(A::Vector{T}) where T<:IntervalBox
+    results = A
+    if length(A) > 1
+        for d in 1:length(A[1])
+            cmp(x, y) = lt_d(x, y, d)
+            results = merge(results, cmp)
+        end
+    end
+    results
 end
 
 function dmerge(A::Vector{T}, n::Integer) where T<:IntervalBox

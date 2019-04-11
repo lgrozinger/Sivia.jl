@@ -1,22 +1,122 @@
 using RecipesBase
 
-## 3d IntervalBox plotting
-@recipe function f(v::Vector{T}) where T<:IntervalBox{3}
+function makie_volume(v::Vector{T}) where T<:IntervalBox{3}
+
     xs = Float64[]
     ys = Float64[]
     zs = Float64[]
 
-    seriestype := :surface
-
     for xyz in v
         (x, y, z) = xyz
-        append!(xs, [x.lo, x.hi, x.lo, x.hi, x.lo, x.hi, x.lo, x.hi])
+        append!(xs, [x.lo, x.lo, x.lo, x.lo, x.hi, x.hi, x.hi, x.hi])
         append!(ys, [y.lo, y.lo, y.hi, y.hi, y.lo, y.lo, y.hi, y.hi])
-        append!(zs, [z.lo, z.lo, z.lo, z.lo, z.hi, z.hi, z.hi, z.hi])
+        append!(zs, [z.lo, z.hi, z.lo, z.hi, z.lo, z.hi, z.lo, z.hi])
+    end
+
+    xs, ys, zs
+end
+
+## 3d IntervalBox plotting
+@recipe function f(v::Vector{T}) where T<:IntervalBox{3}
+
+    for xyz in v
+        # face 1
+        @series begin
+            seriestype := :surface
+            xs = Float64[]
+            ys = Float64[]
+            zs = Float64[]
+            (x, y, z) = xyz
+            append!(xs, [x.lo, x.hi, x.hi, x.lo, x.lo, x.lo, x.hi, x.lo])
+            append!(ys, [y.lo, y.lo, y.hi, y.lo, y.lo, y.hi, y.hi, y.lo])
+            append!(zs, [z.lo, z.lo, z.lo, z.lo, z.lo, z.lo, z.lo, z.lo])
+
+            xs, ys, zs
+        end
+
+        @series begin
+            seriestype := :surface
+            xs = Float64[]
+            ys = Float64[]
+            zs = Float64[]
+            (x, y, z) = xyz
+            append!(xs, [x.lo, x.hi, x.hi, x.lo, x.lo, x.lo, x.hi, x.lo])
+            append!(ys, [y.lo, y.lo, y.hi, y.lo, y.lo, y.hi, y.hi, y.lo])
+            append!(zs, [z.hi, z.hi, z.hi, z.hi, z.hi, z.hi, z.hi, z.hi])
+
+            xs, ys, zs
+        end
+
+        @series begin
+            seriestype := :surface
+            xs = Float64[]
+            ys = Float64[]
+            zs = Float64[]
+            (x, y, z) = xyz
+            append!(xs, [x.hi, x.lo, x.lo, x.hi, x.hi, x.hi, x.lo, x.hi])
+            append!(ys, [y.lo, y.lo, y.lo, y.lo, y.lo, y.lo, y.lo, y.lo])
+            append!(zs, [z.lo, z.hi, z.lo, z.lo, z.lo, z.hi, z.hi, z.lo])
+
+            xs, ys, zs
+        end
+
+        # # face 3
+        # @series begin
+        #     seriestype := :surface
+        #     xs = Float64[]
+        #     ys = Float64[]
+        #     zs = Float64[]
+        #     (x, y, z) = xyz
+        #     append!(xs, [x.lo, x.lo, x.lo, x.lo, x.lo])
+        #     append!(ys, [y.lo, y.lo, y.hi, y.hi, y.lo])
+        #     append!(zs, [z.lo, z.hi, z.hi, z.lo, z.lo])
+
+        #     xs, ys, zs
+        # end
+
+        # # face 4
+        # @series begin
+        #     seriestype := :surface
+        #     xs = Float64[]
+        #     ys = Float64[]
+        #     zs = Float64[]
+        #     (x, y, z) = xyz
+        #     append!(xs, [x.hi, x.hi, x.hi, x.hi, x.hi])
+        #     append!(ys, [y.lo, y.lo, y.hi, y.hi, y.lo])
+        #     append!(zs, [z.lo, z.hi, z.hi, z.lo, z.lo])
+
+        #     xs, ys, zs
+        # end
+
+        # # face 5
+        # @series begin
+        #     seriestype := :surface
+        #     xs = Float64[]
+        #     ys = Float64[]
+        #     zs = Float64[]
+        #     (x, y, z) = xyz
+        #     append!(xs, [x.lo, x.hi, x.hi, x.lo, x.lo])
+        #     append!(ys, [y.lo, y.lo, y.hi, y.hi, y.lo])
+        #     append!(zs, [z.hi, z.hi, z.hi, z.hi, z.hi])
+
+        #     xs, ys, zs
+        # end
+
+        # # face 6
+        # @series begin
+        #     seriestype := :surface
+        #     xs = Float64[]
+        #     ys = Float64[]
+        #     zs = Float64[]
+        #     (x, y, z) = xyz
+        #     append!(xs, [x.lo, x.lo, x.hi, x.hi, x.lo])
+        #     append!(ys, [y.hi, y.hi, y.hi, y.hi, y.hi])
+        #     append!(zs, [z.lo, z.hi, z.hi, z.lo, z.lo])
+
+        #     xs, ys, zs
+        # end
 
     end
-    xs, ys, zs
-
 end
 
 
