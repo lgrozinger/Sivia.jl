@@ -11,3 +11,5 @@ At Julia prompt:
 
 `spaces = Sivia.example()`
 `plot(spaces)`
+
+![Example plotted](spaces.png)
